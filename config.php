@@ -6,7 +6,7 @@
  * Time: 22:24
  */
 
-/* Attempt to connect to Oracle database */
+
 
 $db_config = array(
     'host' => $_POST['host'],
