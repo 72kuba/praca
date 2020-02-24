@@ -5,10 +5,10 @@
  * Date: 17.02.20
  * Time: 16:47
  */
-
+include 'config.php';
 
 function dbinfo() {
-    $db_config = array(
+/*    $db_config = array(
         'host' => '172.21.0.2',
         'port' => '1521',
         'user' => 'jakub',
@@ -17,13 +17,13 @@ function dbinfo() {
         'db_type' => 'oci',
         'encoding' => 'utf-8'
     );
-    $dsn = $db_config['db_type'] .
+*/
+   /* $dsn = $db_config['db_type'] .
         ':host=' . $db_config['host'] .
         ';port=' . $db_config['port'] .
         ';encoding=' . $db_config['encoding'] .
         ';dbname=' . $db_config['db'];
-
-    $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+    */
 
     $dbh = oci_connect($db_config['user'],  $db_config['pass'], $db_config['host'].'/'.$db_config['db'] );
 
@@ -31,7 +31,6 @@ function dbinfo() {
 
     $statement=oci_parse($dbh, $sql);
     oci_execute($statement);
-//    echo "<p>query: $sql</p>";
 
     while($row=oci_fetch_array($statement)){
         echo "<br>";
