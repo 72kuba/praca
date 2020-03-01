@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php'; //include configa dla wszystkich pdostorn
+require_once 'config.php'; //include configa dla wszystkich pdostorn 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +25,9 @@ require_once 'config.php'; //include configa dla wszystkich pdostorn
         $path = __DIR__.'/pages/'.$p.'.php';
         if (file_exists($path)) {
             require $path;
+        }
+        else{
+            die('Nima pliku: '.$path);
         }
     ?>
 </div>
