@@ -5,7 +5,13 @@ if(isset($_POST['submit'])) {
     var_dump($_POST);
     echo '</pre>';
 
-//    $connection = connect() // tutaj dane z POST - jesli nie jest NULL to polaczenie sie udalo i przekieruj gdzie trzeba
+}   $connection = connect($_POST['host'], $_POST[['port']]);//...)
+if($connection === null){
+    die('zle dane poalczneia');
+}
+else{
+    //tutaj redirect
+
 }
 
 
