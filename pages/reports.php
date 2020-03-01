@@ -7,7 +7,7 @@
  */
 include 'config.php';
 
-function dbinfo() {
+function dbinfo($dbh) {
 /*    $db_config = array(
         'host' => '172.21.0.2',
         'port' => '1521',

@@ -11,8 +11,8 @@
 
 //$dbh->query('asdasdas');
 
-$zmienna = 'cycki';
+$name = $db_config['user'];
 ?>
 
-<h1>DUPA</h1>
-<h3><?php echo $zmienna;?></h3>
+<h1>Welcome <?php echo $name;?>! </h1>
+<h3><a href="reports.php">Reports Page</a></h3>
