@@ -10,7 +10,6 @@
 /// PDO (polaczenie z baza) masz dostepne tutaj w zmiennej $dbh, przyklad ponizej;
 
 //$dbh->query('asdasdas');
-$connection = connect($_SESSION['host'], $_SESSION['port'], $_SESSION['username'], $_SESSION['password'], $_SESSION['sid'], 'oci', 'utf-8');
 
 function dbinfo($connection){
 

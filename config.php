@@ -58,14 +58,7 @@ if (!isset($_SESSION['loggedin'])) {
 }
 else{
 
-    $_SESSION['host'] = $_POST['host'];
-    $_SESSION['port'] = $_POST['port'];
-    $_SESSION['username'] = $_POST['username'];
-    $_SESSION['password'] = $_POST['password'];
-    $_SESSION['sid'] = $_POST['sid'];
-    $_SESSION['db_type'] = 'oci';
-    $_SESSION['encoding'] = 'utf-8';
-
+    $connection = connect($_SESSION['host'], $_SESSION['port'], $_SESSION['username'], $_SESSION['password'], $_SESSION['sid'], 'oci', 'utf-8');
     //header("location: /index.php?p=main");
 
 }
