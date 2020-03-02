@@ -27,10 +27,22 @@ function connect($host, $port, $username, $password, $sid, $dbType, $encoding)
             ';encoding='.$db_config['encoding'].
             ';dbname='.$db_config['db'];
 
+        $tns = "
+(DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = $sid)
+    )
+  )
+       ";
+
         // opcje, tutaj ustawienie trybu reagowania na błędy
         $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
         // tworzymy obiekt klasy PDO inicjując tym samym połączenie
+        //return new PDO("oci:dbname=".$tns, $db_config['user'], $db_config['pass'], $options);
         return new PDO($dsn, $db_config['user'], $db_config['pass'], $options);
     } catch (\Exception $e) {
         return null;
@@ -45,5 +57,15 @@ if (!isset($_SESSION['loggedin'])) {
     }
 }
 else{
-    // tutaj wrzucic z sesji dane do polaczenia
+
+    $_SESSION['host'] = $_POST['host'];
+    $_SESSION['port'] = $_POST['port'];
+    $_SESSION['username'] = $_POST['username'];
+    $_SESSION['password'] = $_POST['password'];
+    $_SESSION['sid'] = $_POST['sid'];
+    $_SESSION['db_type'] = 'oci';
+    $_SESSION['encoding'] = 'utf-8';
+
+    //header("location: /index.php?p=main");
+
 }

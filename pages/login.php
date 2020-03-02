@@ -4,15 +4,18 @@ if(isset($_POST['submit'])) {
     echo '<pre>';
     var_dump($_POST);
     echo '</pre>';
+    $connection = connect($_POST['host'], $_POST['port'], $_POST['username'], $_POST['password'], $_POST['sid'], 'oci', 'utf-8');
+    if ($connection === null) {
+        die('zle dane polaczenia');
 
-}   $connection = connect($_POST['host'], $_POST[['port']]);//...)
-if($connection === null){
-    die('zle dane poalczneia');
+    } else {
+        $_SESSION['loggedin'] = true;
+        header('location: /index.php?p=main');
+        exit;
+    }
 }
-else{
-    //tutaj redirect
 
-}
+
 
 
 ?>

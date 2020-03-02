@@ -10,9 +10,16 @@
 /// PDO (polaczenie z baza) masz dostepne tutaj w zmiennej $dbh, przyklad ponizej;
 
 //$dbh->query('asdasdas');
+$connection = connect($_SESSION['host'], $_SESSION['port'], $_SESSION['username'], $_SESSION['password'], $_SESSION['sid'], 'oci', 'utf-8');
 
-$name = $db_config['user'];
+function dbinfo($connection){
+
+    $sql ='select user from dual';
+foreach ($connection->query($sql) as $row) {
+    print $row['user'];
+}
+}
 ?>
 
-<h1>Welcome <?php echo $name;?>! </h1>
+<h1>Welcome <?php echo $_SESSION['username'] ?>! </h1>
 <h3><a href="reports.php">Reports Page</a></h3>

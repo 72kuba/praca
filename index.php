@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once 'config.php'; //include configa dla wszystkich pdostorn 
 ?>
 <!DOCTYPE html>
@@ -33,3 +34,5 @@ require_once 'config.php'; //include configa dla wszystkich pdostorn
 </div>
 </body>
 </html>
+
+<?php ob_end_flush();
