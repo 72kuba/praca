@@ -5,128 +5,107 @@
  * Date: 17.02.20
  * Time: 16:47
  */
-$connection = connect($_POST['host'], $_POST['port'], $_POST['username'], $_POST['password'], $_POST['sid'], 'oci', 'utf-8');
-
-function dbinfo($connection) {
-
-    $stmt = $connection->prepare('select instance_name from v$instance');
-    $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $stmt->closeCursor();
-
-    while($row=oci_fetch_array($results)){
-        echo "<br>";
-        echo "database name: ".$row['NAME'];
+function selectCheck ($string)
+{
+    $string = strtolower(validate($_POST['input_value']));
+    if (startsWith($string, "select")) {
+        return $string;
+    } else {
+        $string = "";
+        return $string;
     }
-
-    while(($row=oci_fetch_array($results,OCI_BOTH))!=false) {
-        echo $row[0];
-    }
-}
-
-function execute_db_info($connection){
-    $query = file_get_contents("./../scripts/db_info.sql");
-    $stmt = $connection->prepare($query);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $stmt->closeCursor();
-
-    while(($row=oci_fetch_array($results,OCI_BOTH))!=false) {
-        echo $row[0];
-    }
-}
-
-
-if($_GET){
-    if(isset($_GET['execute_db_info'])){
-        execute_db_info($connection);
-    }elseif(isset($_GET['execute_free_space'])){
-        execute_free_space($db_config);
-    }elseif(isset($_GET['execute_active_sessions'])){
-        execute_active_sessions($db_config);
-    }elseif(isset($_GET['execute_directories'])){
-        execute_directories($db_config);
-    }
-
 }
 
 ?>
 
+<div class="jumbotron text-center">
+<h1>Welcome to reports page!</h1>
 
+<p>use predefined scripts or create your own query </p>
+<ul id=menu>
+    <li><a href=/index.php?p=main>Main page</a>
+    <li><a href=/index.php?p=reports>Reports page</a>
+    <li><a href=/index.php?p=data_pump>Data Pump page</a>
+</ul>
+</div>
+<div class="container" style="background: #F0F0F0; text-align: center">
+    <div class="container" style="background: #F0F0F0;">
+        <div class="row align-items-center">
+            <div class="col-md" style="padding: 10px">
+                <h2>@db_info</h2>
+                <p>Displays general information about the database. <br>
+                    Requires access to V$ views
+                </p>
+                <a class="btn btn-secondary" style="font-size: 13px"; href=/index.php?p=db_info_report>execute</a><br><br>
 
+                <h2>@free_space</h2>
+                <p>Displays space usage for each datafile. <br>
+                    Requires access to DBA_ views
+                </p>
+                <a class="btn btn-secondary" style="font-size: 13px"; href=/index.php?p=free_space_report>execute</a>
+            </div>
 
-<h2>Welcome to reports page!</h2>
+            <div class="col-md" >
+                <h2>@active_sessions</h2>
+                <p>Displays information on all active database sessions. <br>
+                    Requires access to V$ views
+                </p>
+                <a class="btn btn-secondary" style="font-size: 13px"; href=/index.php?p=sessions_report>execute</a><br><br>
 
-<p>list of predefined scripts: </p>
+                <h2>@directories</h2>
+                <p>Displays information about all accessible directories.<br>
+                    No requirements
+                </p>
+                <a class="btn btn-secondary" style="font-size: 13px"; href=/index.php?p=directories_report>execute</a>
+            </div>
 
-<div id="btnContainer">
-    <button class="btn" onclick="listView()"><i class="fa fa-bars"></i> List</button>
-    <button class="btn active" onclick="gridView()"><i class="fa fa-th-large"></i> Grid</button>
+        </div>
+    </div>
 </div>
 <br>
-
-<div class="row">
-    <div class="column" style="background-color:#aaa;">
-        <h2>@db_info</h2>
-        <p>Displays general information about the database. <br>
-        Requires access to V$ views
-        </p>
-        <input type="submit" class="button" name="execute_db_info" value="execute">
-    </div>
-    <div class="column" style="background-color:#bbb;">
-        <h2>@free_space</h2>
-        <p>Displays space usage for each datafile. <br>
-        Requires access to DBA_ views
-        </p>
-        <input type="submit" class="button" name="execute_free_space" value="execute">
+<div class="container" style="background:  #F0F0F0;">
+    <div class="row align-items-center">
+        <div class="col-md" style="padding: 10px; text-align: center">
+            <h4>to execute your own query: </h4>
+            <form class="validated" action="/index.php?p=query" method="POST">
+                <textarea name="input_value" rows="10" cols="45" wrap="soft" data-validate="startsWith" data-expected="select"> </textarea><br><br>
+                <input type="submit" class="btn btn-secondary" style="font-size: 13px"; name="submit" value="execute query">
+            </form>
+        </div>
     </div>
 </div>
+ <br>
+ <script   src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="   crossorigin="anonymous"></script>
+ <script type="text/javascript">
+     $(function(){
+         $('form.validated').submit(function(e){
+             let inputs = $(this).find('input, textarea');
+             inputs.each(function(){
+                 let data = $(this).data('validate');
+                 let val = $(this).val();
+                 let field = $(this).data('field');
+                 if(typeof data !== 'undefined'){
+                     switch(data){
+                         case 'required':
+                             if(val.length == 0){
+                                 e.preventDefault();
+                                 alert('empty field: '+field);
+                                 return;
+                             }
+                             break;
+                         case 'startsWith':
+                             let expected = $(this).data('expected');
+                             if(!val.startsWith(expected)){
+                                 e.preventDefault();
+                                 alert("must start with "+expected+". select statements only");
+                             }
+                             break;
+                     }
+                 }
+             });
+         });
+     });
+ </script>
 
-<div class="row">
-    <div class="column" style="background-color:#ccc;">
-        <h2>@active_sessions.sql</h2>
-        <p>Displays information on all active database sessions. <br>
-            Requires access to V$ views
-        </p>
-        <input type="submit" class="button" name="execute_active_sessions" value="execute">
-    </div>
-    <div class="column" style="background-color:#ddd;">
-        <h2>@directories</h2>
-        <p>Displays information about all directories.<br>
-            Requires access to DBA_ views
-        </p>
-        <input type="submit" class="button" name="execute_directories" value="execute">
-    </div>
-</div>
 
-<script>
-    // Get the elements with class="column"
-    var elements = document.getElementsByClassName("column");
 
-    // Declare a loop variable
-    var i;
-
-    // List View
-    function listView() {
-        for (i = 0; i < elements.length; i++) {
-            elements[i].style.width = "100%";
-        }
-    }
-
-    // Grid View
-    function gridView() {
-        for (i = 0; i < elements.length; i++) {
-            elements[i].style.width = "50%";
-        }
-    }
-
-    /* Optional: Add active class to the current button (highlight it) */
-    var container = document.getElementById("btnContainer");
-    var btns = container.getElementsByClassName("btn");
-    for (var i = 0; i < btns.length; i++) {
-        btns[i].addEventListener("click", function() {
-            var current = document.getElementsByClassName("active");
-            current[0].className = current[0].className.replace(" active", "");
-            this.className += " active";
-        });
-    }
-</script>

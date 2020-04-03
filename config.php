@@ -7,6 +7,42 @@
  */
 // Initialize the session
 session_start();
+function validate($str) {
+    return trim(htmlspecialchars($str));
+}
+function startsWith ($string, $startString)
+{
+    $len = strlen($startString);
+    return (substr($string, 0, $len) === $startString);
+}
+
+function drawTable(array $rows){
+
+    echo '<table class="table table-bordered">';
+
+    if(empty($rows)){
+        echo '<tr><td colspan=5>no rows selected</td></tr>';
+    }
+    else{
+        $headers = array_keys($rows[0]);
+        echo '<tr>';
+        foreach ($headers as $key => $value) {
+            echo '<td>'.$value.'</td>';
+        }
+        echo '</tr>';
+
+        foreach ($rows as $key => $row) {
+            echo '<tr>';
+            foreach ($headers as $h) {
+                echo '<td>'.$row[$h].'</td>';
+            }
+            echo '</tr>';
+        }
+    }
+
+
+    echo '</table>';
+}
 
 function connect($host, $port, $username, $password, $sid, $dbType, $encoding)
 {
@@ -27,24 +63,13 @@ function connect($host, $port, $username, $password, $sid, $dbType, $encoding)
             ';encoding='.$db_config['encoding'].
             ';dbname='.$db_config['db'];
 
-        $tns = "
-(DESCRIPTION =
-    (ADDRESS_LIST =
-      (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))
-    )
-    (CONNECT_DATA =
-      (SERVICE_NAME = $sid)
-    )
-  )
-       ";
-
         // opcje, tutaj ustawienie trybu reagowania na błędy
         $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
         // tworzymy obiekt klasy PDO inicjując tym samym połączenie
         //return new PDO("oci:dbname=".$tns, $db_config['user'], $db_config['pass'], $options);
         return new PDO($dsn, $db_config['user'], $db_config['pass'], $options);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return null;
     }
 }
@@ -59,6 +84,6 @@ if (!isset($_SESSION['loggedin'])) {
 else{
 
     $connection = connect($_SESSION['host'], $_SESSION['port'], $_SESSION['username'], $_SESSION['password'], $_SESSION['sid'], 'oci', 'utf-8');
-    //header("location: /index.php?p=main");
+
 
 }

@@ -1,3 +1,12 @@
+<div class="jumbotron text-center">
+<h1>Welcome! <br>Current schema is: <?php echo $_SESSION['username'] ?></h1>
+<ul id=menu>
+    <li><a href=/index.php?p=main>Main page</a>
+    <li><a href=/index.php?p=reports>Reports page</a>
+    <li><a href=/index.php?p=data_pump>Data Pump page</a>
+</ul>
+</div>
+
 <?php
 // Przykładowa podstrona - ona sie bedize wysiwetlac automatycznie jesli podasz w przegladarce samo / albo /index.php
 //Dla tworzenia iinych podstron - wzor taki jak ta, w tym miejscu (miedzy tagami php) napierdalasz logike, zapytania i takie tam
@@ -9,8 +18,6 @@
 ///
 /// PDO (polaczenie z baza) masz dostepne tutaj w zmiennej $dbh, przyklad ponizej;
 
-//$dbh->query('asdasdas');
-
 function dbinfo($connection){
 
     $sql ='select user from dual';
@@ -18,7 +25,4 @@ foreach ($connection->query($sql) as $row) {
     print $row['user'];
 }
 }
-?>
 
-<h1>Welcome <?php echo $_SESSION['username'] ?>! </h1>
-<h3><a href="reports.php">Reports Page</a></h3>
